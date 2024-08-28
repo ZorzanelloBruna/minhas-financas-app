@@ -12,7 +12,7 @@ class CadastroUsuario extends React.Component  {
     }
 
     cadastrar() {
-
+        console.log("Botão clicado!");
     }
 
     render(){
