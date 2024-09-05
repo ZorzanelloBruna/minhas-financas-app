@@ -2,6 +2,7 @@ import React from "react";
 import Card from '../components/card';
 import FormGroup from "../components/form-group";
 import { withRouter} from 'react-router-dom';
+import axios from "axios";
 
 class Login extends React.Component {
 
@@ -11,7 +12,21 @@ class Login extends React.Component {
     }
 
     entrar = () => {
-
+        axios.post('http://localhost:8080/api/usuarios/autenticar', {
+            email: this.state.email,
+            senha: this.state.senha
+        }).then(response => {
+            console.log('Login bem-sucedido', response.data);
+            // Salve o token ou prossiga com o login
+        }).catch(error => {
+            if (error.response) {
+                console.log('Erro no login', error.response.data);
+            } else if (error.request) {
+                console.log('Sem resposta do servidor', error.request);
+            } else {
+                console.log('Erro desconhecido', error.message);
+            }
+        });
     }
 
     prepareCadastrar = () => {
