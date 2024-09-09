@@ -1,9 +1,41 @@
 import React from "react"
+import UsuarioService from "../app/service/usuarioService";
+import { LocalStorageService } from "../app/service/localStorageService";
 
 class Home extends React.Component {
 
     state = {
         saldo: 0
+    }
+
+    constructor(){
+        super();
+        this.usuarioService = new UsuarioService();
+    }
+
+    componentDidMount() {
+        
+        const usuarioLogado =LocalStorageService.obterItem('_usuario_logado');
+        
+        if (usuarioLogado) { // Verifica se existe um usuário logado  
+            if (usuarioLogado && usuarioLogado.id && usuarioLogado.token) { // Verifica se o token está disponível
+                this.usuarioService.obterSaldoPorUsuario(usuarioLogado.id, {
+                    headers: {
+                        'Authorization': `Bearer ${usuarioLogado.token}`
+                    }
+                })
+                .then(response => {
+                    this.setState({ saldo: response.data });
+                })
+                .catch(error => {
+                    console.log('Erro ao obter saldo:', error.response);
+                });
+            } else {
+                console.log('Usuário não autenticado.');
+            }
+        } else {
+            console.log('Usuário não autenticado.');
+        }
     }
     render(){
         return(
