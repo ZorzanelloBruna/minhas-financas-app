@@ -19,7 +19,8 @@ class Login extends React.Component {
         this.service = new UsuarioService();
     }
 
-    entrar = () => {
+    entrar = (event) => {
+        event.preventDefault();
         this.service.autenticar({
             email: this.state.email,
             senha: this.state.senha
@@ -70,7 +71,7 @@ class Login extends React.Component {
                                                 id="exampleInputPassword1" 
                                                 placeholder="Password"/>
                                             </FormGroup>
-                                            <button onClick={this.entrar} className="btn btn-success button-spacing">Entrar</button>
+                                            <button type="submit"onClick={this.entrar} className="btn btn-success button-spacing">Entrar</button>
                                             <button onClick={this.prepareCadastrar} className="btn btn-danger button-spacing">Cadastrar</button>
                                         </fieldset>
                                     </div>
