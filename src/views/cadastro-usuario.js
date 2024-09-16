@@ -2,7 +2,7 @@ import React from "react";
 import Card from "../components/card";
 import FormGroup from "../components/form-group";
 import { withRouter} from 'react-router-dom';
-import UsuarioService from "../app/service/usuarioService";
+import UsuarioService from "../app/service/usuario-service";
 import { mensagemSucesso, mensagemErro } from "../components/toastr";
 
 class CadastroUsuario extends React.Component  {

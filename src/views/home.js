@@ -1,6 +1,6 @@
 import React from "react"
-import UsuarioService from "../app/service/usuarioService";
-import { LocalStorageService } from "../app/service/localStorageService";
+import UsuarioService from "../app/service/usuario-service";
+import { LocalStorageService } from "../app/service/local-storage-service";
 
 class Home extends React.Component {
 

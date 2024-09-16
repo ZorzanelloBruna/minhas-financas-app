@@ -2,10 +2,10 @@ import React from "react";
 import { withRouter} from 'react-router-dom';
 import Card from "../../components/card";
 import FormGroup from "../../components/form-group";
-import SelectMenu from "../../components/selectMenu";
-import LancamentosTable from "./lancamentosTable";
-import LancamentoService from "../../app/service/lancamentoService";
-import { LocalStorageService } from "../../app/service/localStorageService";
+import SelectMenu from "../../components/select-menu";
+import LancamentosTable from "./lancamentos-table";
+import LancamentoService from "../../app/service/lancamento-service";
+import { LocalStorageService } from "../../app/service/local-storage-service";
 import * as messages from '../../components/toastr';
 
 

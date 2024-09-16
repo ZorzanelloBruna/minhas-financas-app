@@ -1,9 +1,9 @@
 import React from "react";
 import { Route, Switch, HashRouter} from 'react-router-dom';
-import CadastroUsuario from "../views/cadastroUsuario";
+import CadastroUsuario from "../views/cadastro-usuario";
 import Login from '../views/login';
 import Home from '../views/home';
-import consultaLancamentos from "../views/lancamentos/consultaLancamentos";
+import consultaLancamentos from "../views/lancamentos/consulta-lancamentos";
 
 function Rotas() {
     return(

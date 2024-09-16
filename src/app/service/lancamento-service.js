@@ -1,5 +1,5 @@
-import ApiSevice from "../apiservice";
-import { LocalStorageService } from "./localStorageService";
+import ApiSevice from "../api-service";
+import { LocalStorageService } from "./local-storage-service";
 
 export default class LancamentoService extends ApiSevice {
     constructor(){
