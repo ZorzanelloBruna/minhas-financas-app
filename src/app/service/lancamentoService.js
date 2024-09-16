@@ -65,4 +65,14 @@ export default class LancamentoService extends ApiSevice {
         // Faz a requisição com o cabeçalho contendo o token
         return this.get(params, { headers });
     }
+
+    deletar(id){
+        const token = LocalStorageService.obterItem('_usuario_logado').token;
+
+        // Adiciona o token no header da requisição
+        const headers = {
+            'Authorization': `Bearer ${token}`
+        };
+        return this.delete(`/${id}`, { headers });
+    }
 }

@@ -20,9 +20,9 @@ class ApiSevice {
         return httpClient.put(requestUrl, objeto);
     }
 
-    delete(url){
-        const requestUrl = `${this.apiurl}${url}`
-        return httpClient.delete(requestUrl);
+    delete(url, config = {}) {
+        const requestUrl = `${this.apiurl}${url}`;
+        return httpClient.delete(requestUrl, config);
     }
     
     get(url, config = {}) {

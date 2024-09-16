@@ -8,6 +8,12 @@ import LancamentoService from "../../app/service/lancamentoService";
 import { LocalStorageService } from "../../app/service/localStorageService";
 import * as messages from '../../components/toastr';
 
+
+import { Dialog } from 'primereact/dialog';
+import { Button } from 'primereact/button';
+
+        
+
 class ConsultaLancamentos extends React.Component {
 
     state = {
@@ -15,6 +21,8 @@ class ConsultaLancamentos extends React.Component {
         mes: '', 
         tipo: '',
         descricao: '',
+        mostrarDialogo: false,
+        lancamentoDeletar: {},
         lancamentos: []
     }
 
@@ -46,11 +54,54 @@ class ConsultaLancamentos extends React.Component {
         })
     }
 
+    editar = (id) => {
+        console.log('editando',id);
+    }
+
+    abrirConfirmacao = (Lancamento) => {
+        this.setState({ mostrarDialogo: true, lancamentoDeletar: Lancamento});
+    }
+
+    cancelarDelecao = () => {
+        this.setState({ mostrarDialogo: false, lancamentoDeletar: {}});
+    }
+    
+    deletar = () => {
+        const { lancamentoDeletar, lancamentos } = this.state;
+    
+        if (!lancamentoDeletar || !lancamentoDeletar.id) {
+            messages.mensagemErro('Lançamento para deletar não encontrado.');
+            return;
+        }
+    
+        this.service
+            .deletar(lancamentoDeletar.id)
+            .then(response => {
+                const lancamentosAtualizados = lancamentos.filter(l => l.id !== lancamentoDeletar.id);
+                this.setState({ 
+                    lancamentos: lancamentosAtualizados, 
+                    mostrarDialogo: false 
+                });
+                messages.mensagemSucesso('Lançamento deletado com sucesso!');
+            })
+            .catch(error => {
+                messages.mensagemErro('Ocorreu um erro ao tentar deletar o lançamento');
+            });
+    }
+    
+
     render(){        
 
-       const meses = this.service.obterListaMeses();
-
+        const meses = this.service.obterListaMeses();
         const tipo = this.service.obterListaTipo();
+
+        const confirmarDialogoFooter = (
+            <div>
+                <Button label="Confirmar" icon="pi pi-check" onClick={this.deletar}/>
+                <Button label="Cancelar" icon="pi pi-check" onClick={this.cancelarDelecao}
+                        className="p-button-secondary"/>
+            </div>
+        );
 
         return(
             <Card title="Consulta Lançamentos">
@@ -99,9 +150,22 @@ class ConsultaLancamentos extends React.Component {
                 <div className="row">
                     <div className="col-md-12">
                         <div className="bs-component">
-                            <LancamentosTable lancamentos={this.state.lancamentos}/>
+                            <LancamentosTable lancamentos={this.state.lancamentos}
+                                              AcaoDelete={this.abrirConfirmacao}
+                                              AcaoEditar={this.editar}/>
                         </div>
                     </div>
+                </div>
+                <div>
+                    <Dialog header="IMPORTANTE" 
+                         visible={this.state.mostrarDialogo} 
+                         style={{ width: '50vw' }} 
+                         footer={confirmarDialogoFooter}
+                         onHide={() => this.setState({ mostrarDialogo: false })}>
+                        <p className="m-0">
+                            Confirma a exclusão deste lançamento?
+                        </p>
+                    </Dialog>
                 </div>
             </Card>
         )
