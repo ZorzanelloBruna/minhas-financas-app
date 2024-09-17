@@ -32,6 +32,15 @@ export default class LancamentoService extends ApiSevice {
         ]
     }
 
+    salvar (lancamento) {
+        const token = LocalStorageService.obterItem('_usuario_logado').token; 
+        const headers = {
+        'Authorization': `Bearer ${token}`
+    };
+
+    return this.post('/', lancamento, { headers });
+    }
+    
     consultar(LancamentoFiltro){
         let params = `?ano=${LancamentoFiltro.ano}`;
 

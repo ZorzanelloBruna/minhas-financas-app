@@ -10,9 +10,9 @@ class ApiSevice {
         this.apiurl = apiurl;
     }
 
-    post(url, objeto){
+    post(url, data = {}, config = {}) {
         const requestUrl = `${this.apiurl}${url}`;
-        return httpClient.post(requestUrl,objeto);
+        return httpClient.post(requestUrl, data, config);
     }
 
     put(url, objeto){

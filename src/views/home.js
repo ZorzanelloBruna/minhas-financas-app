@@ -17,14 +17,15 @@ class Home extends React.Component {
         
         const usuarioLogado =LocalStorageService.obterItem('_usuario_logado');
         
-        if (usuarioLogado) { // Verifica se existe um usuário logado  
-            if (usuarioLogado && usuarioLogado.id && usuarioLogado.token) { // Verifica se o token está disponível
+        if (usuarioLogado) {  
+            if (usuarioLogado && usuarioLogado.id && usuarioLogado.token) { 
                 this.usuarioService.obterSaldoPorUsuario(usuarioLogado.id, {
                     headers: {
                         'Authorization': `Bearer ${usuarioLogado.token}`
                     }
                 })
                 .then(response => {
+                    console.log('Resposta da API de saldo:', response.data);
                     this.setState({ saldo: response.data });
                 })
                 .catch(error => {
@@ -48,7 +49,7 @@ class Home extends React.Component {
                     <p className="lead">
                     <a className="btn btn-primary btn-lg" href="#/cadastro-usuario" role="button">
                     <i className="fa fa-users"></i>Cadastrar Usuário</a>
-                    <a className="btn btn-danger btn-lg" href="https://bootswatch.com/flatly/#" role="button">
+                    <a className="btn btn-danger btn-lg" href="#/cadastro-lancamento" role="button">
                     <i className="fa fa-users"></i>Cadastrar Lançamento</a>
                     </p>
             </div>
