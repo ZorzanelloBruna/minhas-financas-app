@@ -81,6 +81,14 @@ export default class LancamentoService extends ApiSevice {
         return this.put(`/${lancamento.id}`, lancamento, { headers });
     }
 
+    atualizarStatus(id, status){
+        const token = LocalStorageService.obterItem('_usuario_logado').token;
+        const headers = {
+        'Authorization': `Bearer ${token}`
+    }
+        return this.put(`/${id}/atualiza-status`, { status }, {headers});
+    }
+
     consultar(LancamentoFiltro){
         let params = `?ano=${LancamentoFiltro.ano}`;
 

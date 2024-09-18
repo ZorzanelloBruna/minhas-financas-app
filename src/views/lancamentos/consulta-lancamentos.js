@@ -44,8 +44,6 @@ class ConsultaLancamentos extends React.Component {
             usuario: usuarioLogado.id,
             descricao: this.state.descricao
         }
-        console.log('Requisição enviada para URL:', this.service.apiurl);
-        console.log(lancamentoFiltro); // Verifique o valor do filtro
         this.service.consultar(lancamentoFiltro)
         .then( resposta => {
             this.setState({lancamentos: resposta.data});
@@ -92,6 +90,26 @@ class ConsultaLancamentos extends React.Component {
     preparaFormularioCadastro = () => {
         this.props.history.push('/cadastro-lancamento');
     }
+
+    alterarStatus = (lancamento, status) => {
+        this.service
+            .atualizarStatus(lancamento.id, status)
+            .then( response => {
+                console.log('Resposta da atualização de status:', response);
+                const lancamentos = this.state.lancamentos;
+                const index = lancamentos.indexOf(lancamento);
+                if(index !== -1){
+                    lancamento['status'] = status;
+                    lancamentos[index] = lancamento
+                    this.setState({lancamento});
+                }
+                messages.mensagemSucesso('Status atualizado com sucesso!')
+            }).catch( e=> {
+                messages.mensagemErro(e.response.data
+                );
+            })
+    }
+
     render(){        
 
         const meses = this.service.obterListaMeses();
@@ -162,7 +180,8 @@ class ConsultaLancamentos extends React.Component {
                         <div className="bs-component">
                             <LancamentosTable lancamentos={this.state.lancamentos}
                                               AcaoDelete={this.abrirConfirmacao}
-                                              AcaoEditar={this.editar}/>
+                                              AcaoEditar={this.editar}
+                                              alterarStatus={this.alterarStatus}/>
                         </div>
                     </div>
                 </div>
