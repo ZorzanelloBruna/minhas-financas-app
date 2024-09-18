@@ -16,7 +16,9 @@ class CadastroLancamento extends React.Component {
         mes:'',
         ano:'',
         tipo:'',
-        status:''
+        status:'',
+        usuario:null,
+        atualizando: false
     }
 
     constructor(){
@@ -24,11 +26,33 @@ class CadastroLancamento extends React.Component {
         this.service = new LancamentoService();
     }
 
+    componentDidMount(){
+        const params = this.props.match.params;
+        
+        if(params.id){
+            this.service.obterPorId(params.id)
+                .then( response => {
+                    this.setState( {...response.data, atualizando: true} );
+                }).catch( error => {
+                    messages.mensagemErro(error.response.data);
+                })
+        }
+        console.log('paramns', params)
+    }
+
     salvar = () => {
         const usuarioLogado = LocalStorageService.obterItem('_usuario_logado');
 
         const { descricao, valor, mes, ano,  tipo } = this.state;
         const lancamento = { descricao, valor, mes, ano,  tipo, usuario: usuarioLogado.id }; 
+
+        try {
+            this.service.validar(lancamento);
+        } catch (error) {
+            const mensagens = error.mensagens;
+                mensagens.forEach(msg => messages.mensagemErro(msg));           
+            return;
+        }
 
         this.service
         .salvar(lancamento)
@@ -41,10 +65,24 @@ class CadastroLancamento extends React.Component {
         })
      }
 
+     atualizar = () => {
+        const { descricao, valor, mes, ano,  tipo, id, usuario, status } = this.state;
+        const lancamento = { descricao, valor, mes, ano,  tipo, id, usuario, status }; 
+
+        this.service
+        .atualizar(lancamento)
+        .then( response => {
+            this.props.history.push('/consulta-lancamento');
+            messages.mensagemSucesso('Lançamento atuaizado com sucesso!');
+        }).catch( error => {
+            messages.mensagemErro(error.response.data);
+        })
+     }
+
     handleChange = (event) => {
         const value = event.target.value;
         const name = event.target.name;
-
+        console.log(`Campo alterado: ${name}, Valor: ${value}`);
         this.setState({[name] : value});
     }
     render(){
@@ -53,7 +91,7 @@ class CadastroLancamento extends React.Component {
         const meses = this.service.obterListaMeses();
 
         return(
-            <Card title="Cadastro de Lançamentos">
+            <Card title={this.state.atualizando? 'Atualização de Lançamento' : 'Cadastro de Lançamento'}>
                 <div className="row">
                     <div className="col-md-12">
                         <FormGroup id="inputDescricao" label="Descrição: *">
@@ -122,7 +160,15 @@ class CadastroLancamento extends React.Component {
                 </div>
                 <div className="row">
                     <div className="col-md-6">
-                        <button className="btn btn-success" onClick={this.salvar}>Salvar</button>
+                        { this.state.atualizando ?
+                            (
+                                <button className="btn btn-primary" onClick={this.atualizar}>Atualizar</button>
+                            ) :
+                            ( 
+                                <button className="btn btn-success" onClick={this.salvar}>Salvar</button>
+                            )
+                        }                       
+                        
                         <button className="btn btn-danger" 
                                 onClick={e=> this.props.history.push('/consulta-lancamento')}>
                                 Cancelar

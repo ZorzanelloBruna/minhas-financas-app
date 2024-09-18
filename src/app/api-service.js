@@ -15,9 +15,9 @@ class ApiSevice {
         return httpClient.post(requestUrl, data, config);
     }
 
-    put(url, objeto){
-    const requestUrl = `${this.apiurl}${url}`;
-        return httpClient.put(requestUrl, objeto);
+    put(url, data = {}, config = {}) {
+        const requestUrl = `${this.apiurl}${url}`;
+        return httpClient.put(requestUrl, data, config);
     }
 
     delete(url, config = {}) {

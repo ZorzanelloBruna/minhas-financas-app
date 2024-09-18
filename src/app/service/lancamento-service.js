@@ -1,5 +1,6 @@
 import ApiSevice from "../api-service";
 import { LocalStorageService } from "./local-storage-service";
+import ErroValidacao from "../exception/erro-validacao";
 
 export default class LancamentoService extends ApiSevice {
     constructor(){
@@ -32,15 +33,54 @@ export default class LancamentoService extends ApiSevice {
         ]
     }
 
+    obterPorId(id){
+        const  token = LocalStorageService.obterItem('_usuario_logado').token;
+        const headers = {
+            'Authorization': `Bearer ${token}`
+        };
+        return this.get(`/${id}`,{ headers });
+    }
+
+    validar(lancamento) {
+        const erros =[];
+
+        if( !lancamento.ano) {
+            erros.push('Informe o ano.')
+        }
+        if( !lancamento.mes) {
+            erros.push('Informe o mês.')
+        }
+        if( !lancamento.valor) {
+            erros.push('Informe o valor.')
+        }
+        if( !lancamento.descricao) {
+            erros.push('Informe a descrição.')
+        }
+        if( !lancamento.tipo) {
+            erros.push('Informe o tipo de lançamento.')
+        }
+
+        if( erros && erros.length > 0){ 
+            throw new ErroValidacao(erros);
+        }
+    }
+
     salvar (lancamento) {
-        const token = LocalStorageService.obterItem('_usuario_logado').token; 
+        const token = LocalStorageService.obterItem('_usuario_logado').token;
         const headers = {
         'Authorization': `Bearer ${token}`
-    };
-
-    return this.post('/', lancamento, { headers });
     }
-    
+        return this.post('/', lancamento, { headers });
+    }
+
+    atualizar (lancamento) {
+        const token = LocalStorageService.obterItem('_usuario_logado').token;
+        const headers = {
+        'Authorization': `Bearer ${token}`
+    }
+        return this.put(`/${lancamento.id}`, lancamento, { headers });
+    }
+
     consultar(LancamentoFiltro){
         let params = `?ano=${LancamentoFiltro.ano}`;
 
@@ -63,15 +103,11 @@ export default class LancamentoService extends ApiSevice {
         if(LancamentoFiltro.descricao) {
             params = `${params}&descricao=${LancamentoFiltro.descricao}`;
         }
-         // Obtém o token do localStorage
         const token = LocalStorageService.obterItem('_usuario_logado').token;
 
-        // Adiciona o token no header da requisição
         const headers = {
             'Authorization': `Bearer ${token}`
         };
-
-        // Faz a requisição com o cabeçalho contendo o token
         return this.get(params, { headers });
     }
 
