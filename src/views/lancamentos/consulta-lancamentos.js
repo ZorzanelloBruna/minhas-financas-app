@@ -46,7 +46,11 @@ class ConsultaLancamentos extends React.Component {
         }
         this.service.consultar(lancamentoFiltro)
         .then( resposta => {
-            this.setState({lancamentos: resposta.data});
+            const lista = resposta.data;
+            if(lista.length < 1){           
+                messages.mensagemAlerta('Nunhum lançamento foi encontrado!')
+            }
+            this.setState({lancamentos: lista});
         }).catch( error => {
             console.log(error);
         })
@@ -164,12 +168,12 @@ class ConsultaLancamentos extends React.Component {
                             <button onClick={this.buscar} 
                                     type="button" 
                                     className="btn btn-success button-spacing">
-                                    Buscar
+                                    <i className="pi pi-search"></i>  Buscar
                             </button>
                             <button type="button" 
                                     className="btn btn-danger button-spacing"
                                     onClick={this.preparaFormularioCadastro}>
-                                    Cadastrar
+                                    <i className="pi pi-plus"></i>  Cadastrar
                             </button>
                         </div>
                     </div>
