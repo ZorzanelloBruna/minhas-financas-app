@@ -5,36 +5,45 @@ import Login from '../views/login';
 import Home from '../views/home';
 import consultaLancamentos from "../views/lancamentos/consulta-lancamentos";
 import cadastroLancamentos from "../views/lancamentos/cadastro-lancamentos";
-import AuthService from "../app/service/authService";
+import { AuthConsumer } from "./provedor-autenticacao";
+//import AuthService from "../app/service/authService";
 
-function RotaAutenticada( { component: Component, ...props }){
+function RotaAutenticada( { component: Component, isUsuarioAutenticado, ...props }){
     return (
         <Route {...props} render={ (componentsPropos) => {
-            if(AuthService.isUsuarioAutenticado()){
+            //if(AuthService.isUsuarioAutenticado){
+                if(isUsuarioAutenticado){
                 return(
                     <Component { ...componentsPropos} />
                 )
             } else {
                 return (
-                    <Redirect to={{pathname: 'login', state: { from: componentsPropos.location}}}/>
+                    <Redirect to={{pathname: '/login', state: { from: componentsPropos.location}}}/>
                 )
             }
         }}/>
     )
 }
 
-function Rotas() {
+function Rotas(props) {
     return(
         <HashRouter>
             <Switch>
                 <Route path="/login" component={Login}/>
                 <Route path="/cadastro-usuario" component={CadastroUsuario}/>
-                <RotaAutenticada path="/home" component={Home}/>                
-                <RotaAutenticada path="/consulta-lancamento" component={consultaLancamentos}/>
-                <RotaAutenticada path="/cadastro-lancamento/:id?" component={cadastroLancamentos}/>
+                <RotaAutenticada isUsuarioAutenticado={props.isUsuarioAutenticado} path="/home" component={Home}/>                
+                <RotaAutenticada isUsuarioAutenticado={props.isUsuarioAutenticado}path="/consulta-lancamento" component={consultaLancamentos}/>
+                <RotaAutenticada isUsuarioAutenticado={props.isUsuarioAutenticado}path="/cadastro-lancamento/:id?" component={cadastroLancamentos}/>
             </Switch>
         </HashRouter>
     )
 }
 
-export default Rotas;
+//export default Rotas;
+export default () => {
+    return (
+        <AuthConsumer>
+            { (context) => (<Rotas isUsuarioAutenticado={context.isAutenticado}/>) }
+        </AuthConsumer>
+    );
+}

@@ -9,17 +9,18 @@ import 'toastr/build/toastr.min.js';
 import 'primereact/resources/themes/nova-alt/theme.css';
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
+import ProvedorAutenticacao from './provedor-autenticacao';
 
  class App extends React.Component{
 
   render(){
     return(
-      <>
+      <ProvedorAutenticacao>
         <Navbar/>
           <div className="container">
             <Rotas/>
           </div>
-      </>
+      </ProvedorAutenticacao>
     )
   }
 }

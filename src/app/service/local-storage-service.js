@@ -4,10 +4,17 @@
         localStorage.setItem(chave,JSON.stringify(valor));
     }
 
-    static obterItem(chave){
-       
+    static obterItem(chave){       
         const item = localStorage.getItem(chave);
-        return JSON.parse(item);
+        if (item) {
+            try {
+                return JSON.parse(item);
+            } catch (e) {
+                console.error("Erro ao fazer parsing do JSON:", e);
+                return null; // retorna null se houver erro no JSON
+            }
+        }
+        return null;
     }
 
     static removerItem(chave){
