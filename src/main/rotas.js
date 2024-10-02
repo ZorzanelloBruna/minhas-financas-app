@@ -6,11 +6,12 @@ import Home from '../views/home';
 import consultaLancamentos from "../views/lancamentos/consulta-lancamentos";
 import cadastroLancamentos from "../views/lancamentos/cadastro-lancamentos";
 import { AuthConsumer } from "./provedor-autenticacao";
+import paginaInicial from "../views/pagina-inicial";
 //import AuthService from "../app/service/authService";
 
 function RotaAutenticada( { component: Component, isUsuarioAutenticado, ...props }){
     return (
-        <Route {...props} render={ (componentsPropos) => {
+        <Route exact {...props} render={ (componentsPropos) => {
             //if(AuthService.isUsuarioAutenticado){
                 if(isUsuarioAutenticado){
                 return(
@@ -29,8 +30,9 @@ function Rotas(props) {
     return(
         <HashRouter>
             <Switch>
-                <Route path="/login" component={Login}/>
-                <Route path="/cadastro-usuario" component={CadastroUsuario}/>
+                <Route exact path="/" component={paginaInicial}/>
+                <Route exact path="/login" component={Login}/>
+                <Route exact path="/cadastro-usuario" component={CadastroUsuario}/>
                 <RotaAutenticada isUsuarioAutenticado={props.isUsuarioAutenticado} path="/home" component={Home}/>                
                 <RotaAutenticada isUsuarioAutenticado={props.isUsuarioAutenticado}path="/consulta-lancamento" component={consultaLancamentos}/>
                 <RotaAutenticada isUsuarioAutenticado={props.isUsuarioAutenticado}path="/cadastro-lancamento/:id?" component={cadastroLancamentos}/>
